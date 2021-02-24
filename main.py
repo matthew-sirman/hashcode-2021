@@ -6,6 +6,10 @@ from Output import Output
 
 def main(in_file: str, out_file: str) -> None:
     parser = Parser(in_file)
+    sol = Solution(parser.create_input())
+    out = Output(sol, out_file)
+
+    out.write()
 
 
 if __name__ == "__main__":
