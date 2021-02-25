@@ -16,12 +16,21 @@ class Intersection:
             return self.id == other.id
         return False
 
+    def __str__(self):
+        return f'{self.id} {" ".join(self.streets_in)}; {" ".join(self.streets_out)}'
+
+    def __hash__(self):
+        return hash(str(self))
+
 class Car:
     def __init__(self, path):
         self.path = path
 
     def __str__(self):
         return ' '.join(str(street) for street in self.path)
+
+    def __hash__(self):
+        return hash(str(self))
 
 class Street:
     def __init__(self, B, E, L, name):
@@ -40,7 +49,6 @@ class Street:
 
     def __str__(self):
         return self.name
-        #return f'(B = {self.B}, E = {self.E}, L = {self.L}, {self.name})'
 
 class DataInput:
     def __init__(self, D, I, F, streets, cars) -> None:
@@ -101,10 +109,6 @@ class Parser:
             path = []
             for street_name in street_names:
                 path.append(street_lookup[street_name])
-                # for street in streets:
-                #     if street.name == street_name:
-                #         path.append(street)
-                #         break
             cars.append(Car(path))
             count += 1
         return DataInput(D, I, F, streets, cars)

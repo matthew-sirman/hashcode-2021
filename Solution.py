@@ -8,6 +8,9 @@ class IntersectionSchedule:
         self.total_schedule_time = sum(map(lambda x: x[1], timings))
 
     def find_street(self, time) -> str:
+        if self.total_schedule_time == 0:
+            return None
+
         time %= self.total_schedule_time
         total = 0
         for (s, t) in self.timings:
@@ -80,37 +83,68 @@ class Schedule(dict):
 
 
 class Solution:
+    FACTOR = 0.95
+    # We have a variable named car_values = {}
+
     def __init__(self, data: DataInput) -> None:
         self.data = data
+        
+        #self.car_journey_time()
         # Index corresponds to the intersection
         self.schedule = self.solve()
     
-    #def car_journey_time(self):
-    #    for _car in self.data.cars:
-    #        time = 0
-    #        for _str in _car.path:
-    #            time = time + _str.L
-    #        if time > self.D * 0.95:
-    #           _car = None
+    def car_journey_time(self, filter_out = True):
+        self.car_values = {}
+        for i, _car in enumerate(self.data.cars):
+            score = sum(map(lambda s: s.L, _car.path)) / self.data.D
+            car_values[_car] = score
+
+            if filter_out:
+                if score > Solution.FACTOR:
+                    self.data.cars[i] = None
+                
+            # time = 0
+            # for _str in _car.path:
+            #     time = time + _str.L
+            # if time > self.D * 0.95:
+            #    _car = None
+        if filter_out:
+            self.data.cars = list(filter(lambda x: x is not None, self.data.cars))
+
+
+        
 
     def solve(self) -> Schedule:
-        return self.solve_round_robin()
+        return self.weighted_solve()
 
     def weighted_solve(self):
-      # look at adjacent graph nodes
-      schedule = Schedule()
-      for _intersec in self.data.intersections:
+        # look at adjacent graph nodes
+        schedule = Schedule()
+        #count the number of times a street is passed
+        road_count = dict()
+        for car in self.data.cars:
+            for street in car.path:
+                if street not in road_count:
+                    road_count[street] = 1
+                else:
+                    road_count[street] += 1
+        
+        for _intersec in self.data.intersections:
             schedule_list = []
-            total_in = 0
+            intersec_count = 0
             for street in _intersec.streets_in:
-                # find the adjacent interesection
-                _id = street.B
-                intersections = [adj_intersec for adj_intersect]
-                int_schedule = (street, 1)
+                intersec_count += road_count[street]
+
+            no_streets_in = len(_intersec.streets_in)
+            for street in _intersec.streets_in:
+                proportion = road_count[street]/intersec_count
+                total_cycle_time = self.data.D*(no_streets_in)/100
+                _time = int(proportion*total_cycle_time) + 1
+                int_schedule = (street, _time)
                 schedule_list.append(int_schedule)
             int_schedule_obj = IntersectionSchedule(schedule_list)
             schedule[_intersec] = int_schedule_obj
-      return schedule
+        return schedule
 
     def solve_round_robin(self):
         # if the intersection only has one incoming, set it always to be greeen.
