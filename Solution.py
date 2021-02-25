@@ -132,11 +132,13 @@ class Solution:
             for street in _intersec.streets_in:
                 intersec_count += road_count[street]
 
+            if intersec_count == 0:
+                continue
+
             no_streets_in = len(_intersec.streets_in)
             for street in _intersec.streets_in:
                 proportion = road_count[street]/intersec_count
                 total_cycle_time = self.data.D*(no_streets_in)/100
-                print(total_cycle_time)
                 _time = int(proportion*total_cycle_time) + 1
                 int_schedule = (street, _time)
                 schedule_list.append(int_schedule)
