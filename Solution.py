@@ -121,13 +121,10 @@ class Solution:
         # look at adjacent graph nodes
         schedule = Schedule()
         #count the number of times a street is passed
-        road_count = dict()
+        road_count = {s: 0 for s in self.data.streets}
         for car in self.data.cars:
             for street in car.path:
-                if street not in road_count:
-                    road_count[street] = 1
-                else:
-                    road_count[street] += 1
+                road_count[street] += 1
         
         for _intersec in self.data.intersections:
             schedule_list = []
@@ -139,6 +136,7 @@ class Solution:
             for street in _intersec.streets_in:
                 proportion = road_count[street]/intersec_count
                 total_cycle_time = self.data.D*(no_streets_in)/100
+                print(total_cycle_time)
                 _time = int(proportion*total_cycle_time) + 1
                 int_schedule = (street, _time)
                 schedule_list.append(int_schedule)
