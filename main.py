@@ -12,10 +12,10 @@ def main(in_file: str, out_file: str) -> None:
     sol = Solution(data_obj)
     print("Solved")
     
-    print(f'Score: {Metric(sol).calculate()}')
-
     with open(out_file, 'w') as f:
         f.write(str(sol))
+
+    print(f'Score: {Metric(sol).calculate()}')
 
     #out = Output(sol, out_file)
 

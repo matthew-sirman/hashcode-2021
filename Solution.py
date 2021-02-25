@@ -104,7 +104,8 @@ class Solution:
             total_in = 0
             for street in _intersec.streets_in:
                 # find the adjacent interesection
-                street.B
+                _id = street.B
+                intersections = []
                 int_schedule = (street, 1)
                 schedule_list.append(int_schedule)
             int_schedule_obj = IntersectionSchedule(schedule_list)
