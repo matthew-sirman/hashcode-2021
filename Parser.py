@@ -58,9 +58,9 @@ class DataInput:
                     intersection_lookup[id] = intersection
                 intersection = intersection_lookup[id]
                 if id == street.B:
-                    intersection.add_in(street)
-                else:
                     intersection.add_out(street)
+                else:
+                    intersection.add_in(street)
         self.intersections = intersection_lookup.values()
 
     
