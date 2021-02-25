@@ -22,7 +22,8 @@ class Metric:
             intersection_cars[s] = []
 
         for c in self.data.cars:
-            k = c.path.pop(0)
+            c.path = c.path[::-1]
+            k = c.path.pop()
             intersection_cars[k].append(c)
 
         score = 0
@@ -37,7 +38,7 @@ class Metric:
                         # This pops from the dictionary as well - the list is a ref
                         car = waiting_cars.pop(0)
                         # Move the car onto the next street on its path
-                        street_cars[car.path[0]].append((car, 0))
+                        street_cars[car.path[-1]].append((car, 0))
 
             # Look at each street
             for s in street_cars:
@@ -45,7 +46,7 @@ class Metric:
                     # Move the car along the street
                     street_cars[s][i] = (c, t+1)
                     if t + 1 == s.L:
-                        new_s = c.path.pop(0)
+                        new_s = c.path.pop()
                         # Reached the end
                         if len(c.path) == 0:
                             score += self.data.F + self.data.D - step - 1

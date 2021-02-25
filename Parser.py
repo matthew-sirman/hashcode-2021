@@ -50,23 +50,18 @@ class DataInput:
         self.streets = streets
         self.cars = cars
 
-        self.intersections = []
-        seen = []
+        intersection_lookup = {}
         for street in streets:
             for id in (street.B, street.E):
-                if not id in seen:
-                    seen.append(id)
+                if not id in intersection_lookup:
                     intersection = Intersection(id, [], [])
-                    self.intersections.append(intersection)
-                else:
-                    for _intersection in self.intersections:
-                        if _intersection.id == id:
-                            intersection = _intersection
-                            break
+                    intersection_lookup[id] = intersection
+                intersection = intersection_lookup[id]
                 if id == street.B:
                     intersection.add_in(street)
                 else:
                     intersection.add_out(street)
+        self.intersections = intersection_lookup.values()
 
     
     def __str__(self):
@@ -88,12 +83,15 @@ class Parser:
         D,I,S,V,F = tuple(map(lambda x: int(x), self.lines[count].split(' ')))
         count += 1
         streets = []
+        street_lookup = dict()
         for i in range(S):
             B,E,name,L = tuple(self.lines[count].split(' '))
             B = int(B)
             E = int(E)
             L = int(L)
-            streets.append(Street(B,E,L,name))
+            new_s = Street(B, E, L, name)
+            streets.append(new_s)
+            street_lookup[name] = new_s
             count += 1
         cars = []
         for i in range(V):
@@ -102,10 +100,11 @@ class Parser:
             street_names = data[1:]
             path = []
             for street_name in street_names:
-                for street in streets:
-                    if street.name == street_name:
-                        path.append(street)
-                        break
+                path.append(street_lookup[street_name])
+                # for street in streets:
+                #     if street.name == street_name:
+                #         path.append(street)
+                #         break
             cars.append(Car(path))
             count += 1
         return DataInput(D, I, F, streets, cars)

@@ -96,6 +96,20 @@ class Solution:
     def solve(self) -> Schedule:
         return self.solve_round_robin()
 
+    def weighted_solve(self):
+      # look at adjacent graph nodes
+      schedule = Schedule()
+      for _intersec in self.data.intersections:
+            schedule_list = []
+            total_in = 0
+            for street in _intersec.streets_in:
+                # find the adjacent interesection
+                street.B
+                int_schedule = (street, 1)
+                schedule_list.append(int_schedule)
+            int_schedule_obj = IntersectionSchedule(schedule_list)
+            schedule[_intersec] = int_schedule_obj
+      return schedule
 
     def solve_round_robin(self):
         # if the intersection only has one incoming, set it always to be greeen.

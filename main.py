@@ -4,11 +4,13 @@ from Solution import Solution
 from Output import Output
 from Metric import Metric
 
+
 def main(in_file: str, out_file: str) -> None:
     parser = Parser(in_file)
     data_obj = parser.create_input() 
     print("data parsed!")
     sol = Solution(data_obj)
+    print("Solved")
     
     print(f'Score: {Metric(sol).calculate()}')
 
