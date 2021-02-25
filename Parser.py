@@ -1,6 +1,76 @@
+class Intersection:
+    def __init__(self, id, streets_in, streets_out):
+        self.id = id
+        self.streets_in = streets_in
+        self.streets_out = streets_out
+    
+    def add_in(self, street):
+        if not street in self.streets_in:
+            self.streets_in.append(street)
+    def add_out(self, street):
+        if not street in self.streets_out:
+            self.streets_out.append(street)
+
+    def __eq__(self, other):
+        if isinstance(other, IntersectionInternal):
+            return self.id == other.id
+        return False
+
+class Car:
+    def __init__(self, path):
+        self.path = path
+
+    def __str__(self):
+        return ' '.join(str(street) for street in self.path)
+
+class Street:
+    def __init__(self, B, E, L, name):
+        self.B = B
+        self.E = E
+        self.L = L
+        self.name = name
+
+    def __eq__(self, other):
+        if isinstance(other, Street):
+            return self.name == other.name
+        return False
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __str__(self):
+        return self.name
+        #return f'(B = {self.B}, E = {self.E}, L = {self.L}, {self.name})'
+
 class DataInput:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, D, I, F, streets, cars) -> None:
+        self.D = D
+        self.I = I
+        self.F = F
+        self.streets = streets
+        self.cars = cars
+
+        self.intersections = []
+        seen = []
+        for street in streets:
+            for id in (street.B, street.E):
+                if not id in seen:
+                    seen.append(id)
+                    intersection = Intersection(id, [], [])
+                    self.intersections.append(intersection)
+                else:
+                    for _intersection in self.intersections:
+                        if _intersection.id == id:
+                            intersection = _intersection
+                            break
+                if id == street.B:
+                    intersection.add_in(street)
+                else:
+                    intersection.add_out(street)
+
+    
+    def __str__(self):
+        return f'D = {self.D} I = {self.I} F = {self.F}\n\n' + 'Streets:\n' + '\n'.join(str(street) for street in self.streets) + '\n\nCars:\n' + '\n'.join(str(car) for car in self.cars)
 
 
 class Parser:
@@ -9,8 +79,34 @@ class Parser:
         lines = []
         with open(input_file, "r") as in_file:
             for line in in_file:
-                lines.append(line)
+                if line != '':
+                    lines.append(line)
+        self.lines = lines
 
     def create_input(self) -> DataInput:
-        pass
+        count = 0
+        D,I,S,V,F = tuple(map(lambda x: int(x), self.lines[count].split(' ')))
+        count += 1
+        streets = []
+        for i in range(S):
+            B,E,name,L = tuple(self.lines[count].split(' '))
+            B = int(B)
+            E = int(E)
+            L = int(L)
+            streets.append(Street(B,E,L,name))
+            count += 1
+        cars = []
+        for i in range(V):
+            data = self.lines[count].split(' ')
+            P = int(data[0])
+            street_names = data[1:]
+            path = []
+            for street_name in street_names:
+                for street in streets:
+                    if street.name == street_name:
+                        path.append(street)
+                        break
+            cars.append(Car(path))
+            count += 1
+        return DataInput(D, I, F, streets, cars)
 
