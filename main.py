@@ -10,10 +10,11 @@ def main(in_file: str, out_file: str) -> None:
     out = Output(sol, out_file)
 
     out.write()
+    print("change")
 
 
 if __name__ == "__main__":
-    if sys.argc != 2:
+    if len(sys.argv) != 2:
         print("Please provide 2 arguments for input and output files.")
     else:
         in_file, out_file = sys.argv
