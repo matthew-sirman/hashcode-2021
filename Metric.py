@@ -29,8 +29,10 @@ class Metric:
 
         for step in range(self.data.D):
             # Update the light at each intersection
+            print("SCHEDULES")
             for i in range(self.data.I):
                 light = self.sol.schedule[i].find_street(step)
+                print(light.name)
                 if light is not None:
                     waiting_cars = intersection_cars[light]
                     if len(waiting_cars) > 0:

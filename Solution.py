@@ -126,5 +126,5 @@ class Solution:
             for i in range(len(timings)):
                 street,timing = timings[i]
                 result += f'{street.name} {timing}' + '\n'
-        return result.trim()
+        return result.strip()
             
