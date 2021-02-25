@@ -6,12 +6,14 @@ from Metric import Metric
 
 def main(in_file: str, out_file: str) -> None:
     parser = Parser(in_file)
-    print
-    sol = Solution(parser.create_input())
+    data_obj = parser.create_input() 
+    print("data parsed!")
+    sol = Solution(data_obj)
     
-    print(sol)
-    print('\n\n')
     print(f'Score: {Metric(sol).calculate()}')
+
+    with open(out_file, 'w') as f:
+        f.write(str(sol))
 
     #out = Output(sol, out_file)
 
