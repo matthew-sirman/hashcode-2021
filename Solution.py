@@ -138,13 +138,14 @@ class Solution:
 
             no_streets_in = len(_intersec.streets_in)
             for street in _intersec.streets_in:
-                proportion = road_count[street]/intersec_count
+                proportion = road_count[street]**2/intersec_count
                 total_cycle_time = self.data.D*(no_streets_in)/100
+                #print(road_count[street])
                 print(total_cycle_time)
                 _time = int(proportion*total_cycle_time) + 1
                 int_schedule = (street, _time)
                 schedule_list.append(int_schedule)
-            int_schedule_obj = IntersectionSchedule(schedule_list)
+            int_schedule_obj = IntersectionSchedule(sorted(schedule_list, key=lambda x: x[1], reverse=True))
             schedule[_intersec] = int_schedule_obj
         return schedule
 
