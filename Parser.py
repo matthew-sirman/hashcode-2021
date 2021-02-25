@@ -12,7 +12,7 @@ class Intersection:
             self.streets_out.append(street)
 
     def __eq__(self, other):
-        if isinstance(other, IntersectionInternal):
+        if isinstance(other, Intersection):
             return self.id == other.id
         return False
 
@@ -81,7 +81,7 @@ class Parser:
             for line in in_file:
                 if line != '':
                     lines.append(line)
-        self.lines = lines
+        self.lines = [line.strip() for line in lines]
 
     def create_input(self) -> DataInput:
         count = 0
