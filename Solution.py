@@ -89,15 +89,15 @@ class Solution:
     def __init__(self, data: DataInput) -> None:
         self.data = data
         
-        #self.car_journey_time()
+        self.car_values = dict()
+        self.car_journey_time()
         # Index corresponds to the intersection
         self.schedule = self.solve()
     
     def car_journey_time(self, filter_out = True):
-        self.car_values = {}
         for i, _car in enumerate(self.data.cars):
             score = sum(map(lambda s: s.L, _car.path)) / self.data.D
-            car_values[_car] = score
+            self.car_values[_car] = score
 
             if filter_out:
                 if score > Solution.FACTOR:
@@ -133,12 +133,14 @@ class Solution:
                 intersec_count += road_count[street]
 
             if intersec_count == 0:
+                schedule[_intersec] = IntersectionSchedule([(s, 1) for s in _intersec.streets_in])
                 continue
 
             no_streets_in = len(_intersec.streets_in)
             for street in _intersec.streets_in:
                 proportion = road_count[street]/intersec_count
                 total_cycle_time = self.data.D*(no_streets_in)/100
+                print(total_cycle_time)
                 _time = int(proportion*total_cycle_time) + 1
                 int_schedule = (street, _time)
                 schedule_list.append(int_schedule)
